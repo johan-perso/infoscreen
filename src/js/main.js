@@ -80,6 +80,20 @@ ipcRenderer.on("weather", (event, arg) => {
 	document.getElementById("temperatureContainer").classList.remove("hidden")
 })
 
+// Si on a pas reçu d'élements pour la deuxième colonne, on passe en écran unique
+var checkForSecondColumn = setTimeout(() => {
+	if(document.getElementById("homeAssistant").src || document.getElementById("spotifyPlayer").src) return
+
+	console.log("Hiding second column because no content was received for it")
+
+	document.getElementById("secondColumn").classList.add("hidden")
+	document.getElementById("firstColumn").style.gridArea = ""
+	document.body.style.gridTemplateColumns = ""
+	document.body.style.gridTemplateRows = ""
+
+	clearTimeout(checkForSecondColumn)
+}, 20000)
+
 // Arrondir la cover Spotify
 document.getElementById("spotifyPlayer").addEventListener("dom-ready", () => {
 	document.getElementById("spotifyPlayer").insertCSS("[x-show=\"showArtwork\"]{ border-radius: 5px !important; }")

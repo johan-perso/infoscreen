@@ -80,6 +80,10 @@ L'emploi du temps est obtenu chaque nuit à quatre heures du matin et ne prendra
 
 La variable `PRONOTE_CAS` vous permet de vous connecter à Pronote via un CAS, laissez vide ou entrer une valeur à partir de [cette liste](https://github.com/bain3/pronotepy/blob/master/pronotepy/ent/ent.py).
 
+### Utilisation sans Spotify/Home Assistant
+
+Si aucune valeur n'est définie pour `SPOTIFY_MINIPLAYER` **et** `HA_DASHBOARD`, les fonctionnalités correspondantes seront désactivées. Les informations essentielles (heure, date, météo, barre de progression via Pronote) seront affichées en plein écran après vingt secondes.
+
 
 ## API
 
