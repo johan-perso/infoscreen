@@ -3,6 +3,7 @@ const { ipcRenderer } = require("electron")
 
 // Variables
 var timetable
+var haZoomFactor = false
 
 // Fonction pour échapper les caractères spéciaux
 function escapeHtml(text){
@@ -67,6 +68,7 @@ ipcRenderer.on("camera", (event, arg) => {
 ipcRenderer.on("dotenv", (event, arg) => {
 	if(arg.key == "HA_DASHBOARD") document.getElementById("homeAssistant").src = arg.value
 	else if(arg.key == "SPOTIFY_MINIPLAYER") document.getElementById("spotifyPlayer").src = arg.value
+	else if(arg.key == "HA_ZOOM_FACTOR" && haZoomFactor == false) haZoomFactor = arg.value
 })
 ipcRenderer.on("battery", (event, arg) => {
 	if(arg == "hide") return document.getElementById("battery_container").style.display = "none"
@@ -119,9 +121,13 @@ document.getElementById("spotifyPlayer").addEventListener("dom-ready", () => {
 	document.getElementById("spotifyPlayer").insertCSS("[x-show=\"showArtwork\"]{ border-radius: 5px !important; }")
 })
 
-// Augmenter le niveau de zoom du dashboard Home Assistant
-document.getElementById("homeAssistant").addEventListener("dom-ready", () => {
-	document.getElementById("homeAssistant").setZoomFactor(1.22)
+// // Augmenter le niveau de zoom du dashboard Home Assistant
+document.getElementById("homeAssistant").addEventListener("dom-ready", async () => {
+	if(typeof haZoomFactor == "number") document.getElementById("homeAssistant").setZoomFactor(haZoomFactor)
+	else {
+		while(typeof haZoomFactor != "number") await new Promise(resolve => setTimeout(resolve, 500))
+		document.getElementById("homeAssistant").setZoomFactor(haZoomFactor)
+	}
 })
 
 // On actualise certaines données à intervalles réguliers

@@ -59,6 +59,7 @@ async function main(){
 	window.webContents.on("did-finish-load", () => {
 		window.webContents.send("dotenv", { key: "SPOTIFY_MINIPLAYER", value: process.env.SPOTIFY_MINIPLAYER })
 		window.webContents.send("dotenv", { key: "HA_DASHBOARD", value: process.env.HA_DASHBOARD })
+		window.webContents.send("dotenv", { key: "HA_ZOOM_FACTOR", value: parseFloat(process.env.HA_ZOOM_FACTOR) || 1.22 })
 	})
 }
 
