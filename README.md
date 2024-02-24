@@ -29,15 +29,24 @@ Ce projet a pour but d'afficher de multiples informations sur un écran tactile 
 > L'installation nécessite Git, NodeJS (version récente), NPM et PM2.
 
 ```
+# Installation d'InfoScreen
 git clone https://github.com/johan-perso/infoscreen
 cd infoscreen
 npm install
 
-pm2 start "npm run start" --name InfoScreen
+# Démarrage
+npm run start
+
+# Pour laisser le projet tourner en arrière-plan, vous pouvez utiliser PM2
+# pm2 start "npm run start" --name InfoScreen
 
 # Pour la première utilisation de PM2, exécuter également ces commandes
-pm2 startup
-pm2 save
+# pm2 startup
+# pm2 save
+
+# Vous pourrez ensuite le fermer avec
+# pm2 stop InfoScreen
+# pm2 save
 ```
 
 
