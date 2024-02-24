@@ -81,17 +81,37 @@ ipcRenderer.on("weather", (event, arg) => {
 })
 
 // Si on a pas reçu d'élements pour la deuxième colonne, on passe en écran unique
-var checkForSecondColumn = setTimeout(() => {
-	if(document.getElementById("homeAssistant").src || document.getElementById("spotifyPlayer").src) return
+setTimeout(() => {
+	// Si on a Spotify mais pas Home Assistant
+	if(document.getElementById("spotifyPlayer").src && !document.getElementById("homeAssistant").src){
+		console.log("Hiding Home Assistant and resizing Spotify because of content received")
 
-	console.log("Hiding second column because no content was received for it")
+		document.getElementById("spotifyPlayer").src = "https://nowplayi.ng/playing.php" // on passe sur un lecteur plus grand
+		document.getElementById("spotifyPlayer").parentElement.classList.remove("h-1/4")
+		document.getElementById("spotifyPlayer").parentElement.classList.add("h-full")
+		document.getElementById("homeAssistant").parentElement.classList.add("hidden")
+		document.getElementById("homeAssistant").remove()
+	}
 
-	document.getElementById("secondColumn").classList.add("hidden")
-	document.getElementById("firstColumn").style.gridArea = ""
-	document.body.style.gridTemplateColumns = ""
-	document.body.style.gridTemplateRows = ""
+	// Si on a Home Assistant mais pas Spotify
+	else if(document.getElementById("homeAssistant").src && !document.getElementById("spotifyPlayer").src){
+		console.log("Hiding Spotify and resizing Home Assistant because of content received")
 
-	clearTimeout(checkForSecondColumn)
+		document.getElementById("homeAssistant").parentElement.classList.remove("h-3/4", "mt-2")
+		document.getElementById("homeAssistant").parentElement.classList.add("h-full")
+		document.getElementById("spotifyPlayer").parentElement.classList.add("hidden")
+		document.getElementById("spotifyPlayer").remove()
+	}
+
+	// Si on a ni Spotify ni Home Assistant
+	else if(!document.getElementById("spotifyPlayer").src && !document.getElementById("homeAssistant").src){
+		console.log("Hiding second column because no content was received for it")
+
+		document.getElementById("secondColumn").classList.add("hidden")
+		document.getElementById("firstColumn").style.gridArea = ""
+		document.body.style.gridTemplateColumns = ""
+		document.body.style.gridTemplateRows = ""
+	}
 }, 20000)
 
 // Arrondir la cover Spotify
