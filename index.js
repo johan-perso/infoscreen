@@ -122,13 +122,13 @@ CronJob.from({
 })
 
 // Récupérer le niveau de batterie
-setInterval(async () => {
+var checkBatteryInterval = setInterval(async () => {
 	// Obtenir le niveau de batterie
 	var battery
 	try {
 		battery = childProcess.execSync("upower -i `upower -e | grep 'BAT'` | grep 'percentage:'").toString().trim().replace(/[^0-9]/g, "")
 		battery = parseInt(battery)
-	} catch(err){ console.error("Impossible d'obtenir le niveau de batterie:", err) }
+	} catch(err){ console.error("Impossible d'obtenir le niveau de batterie:", err); clearInterval(checkBatteryInterval) }
 
 	// Si la batterie est inférieure à 35%, on envoie le niveau, sinon, on envoie "hide"
 	if(battery) window.webContents.send("battery", battery < 35 ? battery : "hide")
