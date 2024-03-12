@@ -123,16 +123,25 @@ CronJob.from({
 })
 
 // Récupérer le niveau de batterie
-var checkBatteryInterval = setInterval(async () => {
+var lastBattery = 0
+setInterval(async () => {
 	// Obtenir le niveau de batterie
 	var battery
 	try {
 		battery = childProcess.execSync("upower -i `upower -e | grep 'BAT'` | grep 'percentage:'").toString().trim().replace(/[^0-9]/g, "")
 		battery = parseInt(battery)
-	} catch(err){ console.error("Impossible d'obtenir le niveau de batterie:", err); clearInterval(checkBatteryInterval) }
+	} catch(err){ console.error("Impossible d'obtenir le niveau de batterie:", err) }
 
 	// Si la batterie est inférieure à 35%, on envoie le niveau, sinon, on envoie "hide"
 	if(battery) window.webContents.send("battery", battery < 35 ? battery : "hide")
+
+	// Si on a 100% de batterie et que le précedent niveau était différent, on envoie une notification
+	if(battery && battery == 100 && lastBattery != 100){
+		window.webContents.send("notification", { title: "Batterie", content: "La batterie est chargée à 100%", iconPath: "img/highBattery.png", timeout: 300000 })
+	}
+
+	// On met à jour le dernier niveau de batterie
+	if(battery) lastBattery = battery
 }, 60 * 1000)
 
 // Se connecter au WebSocket pour obtenir l'heure du BeReal
